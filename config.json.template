@@ -1,0 +1,11 @@
+{
+  "follow" : "#furmore17",
+  "port"   : 3010,
+  "twitter" : {
+    "consumer_key" : "<CONSUMER KEY>",
+    "consumer_secret" : "<CONSUMER SECRET>",
+    "access_token_key" : "<ACCESS TOKEN KEY>",
+    "access_token_secret" : "<ACCESS TOKEN SECRET>"
+  }
+}
+
