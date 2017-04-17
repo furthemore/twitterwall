@@ -1,1 +1,145 @@
-/var/www/html/twitter.html
+  <!doctype HTML>
+  <html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/novalabs/static/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="/novalabs/static/slick/slick-theme.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+  <body>
+  <div class="container">
+    <span class="blink_me blink-left">INSERT</span>
+    <span class="blink_me blink-right">COIN</span>
+    <img class="header" src="/Fur-the-Mores.png">
+
+    <div class="top5 score">
+      <div>Top Scores</div>
+      <div id="player1"></div>
+      <div id="player2"></div>
+      <div id="player3"></div>
+      <div id="player4"></div>
+      <div id="player5"></div>
+    </div>
+
+    <div id="tweets">
+      <div class="tweet"></div>
+    </div>
+
+    <div id="loader" class="loader loader-status">Disconnected...</div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="/novalabs/static/slick/slick.min.js"></script>
+  <script src="//twemoji.maxcdn.com/2/twemoji.min.js?2.2.3"></script>
+  <script>
+    $(document).ready(function () {
+      $(".container").css("animation", "turn-on 4s linear");
+
+      $(".top5").slick({
+        dots: false,
+        autoplay: true,
+        autoplaySpeed: 5000,
+        focusOnSelect: false,
+        pauseOnFocus: false,
+        pauseOnHover: false,
+
+        arrows: false
+      });
+
+      (function blink() { 
+        $('.blink_me').fadeOut(500).fadeIn(500, blink); 
+      })();
+    });
+
+    function format_time(time) {
+      var date = new Date(time);
+      var hours = date.getHours();
+      var minutes = "0" + date.getMinutes();
+      var seconds = "0" + date.getSeconds();
+      return hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
+    }
+
+    function format_tweet(tweet) {
+      var text = tweet.text;
+      if ('extended_tweet' in tweet) {
+        text = tweet.extended_tweet.full_text;
+      }
+
+      var awoo = "";
+      var pattern = /awoo/i;
+      if (pattern.test(text)) {
+        awoo = '<span class="awoo">-350 HP</span>';
+      }
+      return twemoji.parse('<div class="tweet" id="tweet_' + tweet.id + '">' + awoo +
+              '<img class="profile_icon" src="' + tweet.user.profile_image_url + '">'+
+              '<div class="tweet_body"><span class="tweet_author">' + tweet.user.name +
+                '</span> <span class="handle">(@'+ tweet.user.screen_name +')</span> - <span class="timestamp">'+ format_time(tweet.created_at) + '</span>' +
+                '<div class="historyMessage">' +
+                  '<div class="tweet_text">' + text +
+                '</div>' +
+              '</div>');
+    }
+    
+    var sock = new WebSocket("ws://rechner.us.to:3010");
+    var onmessage_callback = function (event) {
+      if (event.data == 'pong') {
+        // clear timeout
+        window.clearTimeout(timeoutID);
+        return;
+      }
+      var data = JSON.parse(event.data);
+      console.log(data);
+      if (data.type == 'tweet' && ('tweet' in data)) {
+        if (!('retweeted_status' in data.tweet) && (data.in_reply_to_screen_name == null)) {
+          var formatted = format_tweet(data.tweet);
+          $("#tweets").prepend($(formatted).hide().fadeIn());
+        }
+      } else if (data.type == 'top5') {
+        console.log("Update top5");
+        $("#player"+data.message.position).text(data.message.text);
+      } else if (data.type == 'blacklist') {
+        console.log("Blacklist new word: " + data.word);
+        $(".tweet:contains('" + data.word + "')").hide();
+      } else if (data.type == 'whitelist') {
+        console.log("Whitelist word: " + data.word);
+        $(".tweet:contains('" + data.word + "')").show();
+      } 
+    }
+    sock.onmessage = onmessage_callback;
+
+    sock.onopen = function(event) {
+      $("#loader").fadeOut();
+      sock.send(JSON.stringify({ command : 'history' }));
+      sock.send(JSON.stringify({ command : 'top5_history' }));
+    }
+
+    var timeoutID;
+    window.setInterval(keep_alive, 20000);
+
+    function fail_timeout() {
+      $("#loader").fadeIn();
+      console.log("Keepalive failed, reopening socket...");
+      sock.close();
+      sock = new WebSocket("ws://rechner.us.to:3010");
+      sock.onmessage = onmessage_callback;
+      timeout();
+    }
+
+    function keep_alive() {
+      sock.send('ping');
+      timeoutID = window.setTimeout(fail_timeout, 2000);
+    }
+
+    window.setInterval(crt_flicker, 600000);
+
+    function crt_flicker() {
+      $(".container").css("animation", "turn-off 0.55s cubic-bezier(0.23, 1, 0.32, 1)");
+
+      window.setTimeout(function () {
+        $(".container").css("animation", "turn-on 4s linear");
+      }, 550);
+    }
+  </script>
+
+  </body>
+</html>
