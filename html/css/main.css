@@ -1,0 +1,377 @@
+@font-face {
+  font-family: 'computer_pixel';
+  src: url('http://rechner.us.to/computer_pixel-7-webfont.woff2') format('woff2'),
+  url('http://rechner.us.to/computer_pixel-7-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.score {
+  font-family: 'computer_pixel';
+  font-size: 20px;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: black;
+  color: white;
+  /*overflow: hidden;*/
+}
+
+img.header {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tweet {
+  margin: 8px 10px 8px 16px;
+  display: block;
+  min-height: 50px;
+}
+
+
+.tweet > .profile_icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 15px;
+  overflow: hidden;
+  float: left !important;
+}
+
+.tweet > .tweet_time {
+  float: right !important;
+  user-select: none;
+  text-align: right;
+}
+
+.tweet_body {
+  user-select: text;
+  display: block;
+  overflow: hidden;
+}
+
+.tweet_author {
+  color: #b3577a;
+  font-weight: 800;
+}
+
+.tweet_text {
+   word-wrap: break-word;
+   line-height: 150%;
+   white-space: pre-wrap;
+}
+.message_sticker > img {
+    height: 250px;
+}
+
+.emoji {
+  height: 20px;
+}
+
+.handle {
+  color: #ccc;
+}
+
+.top5 {
+  height: 100px;
+  font-size: 100px;
+  text-align: center;
+}
+
+.blink-left {
+  font-family: 'computer_pixel';
+  font-size: 70px;
+  position: absolute;
+  left: 70px;
+  top: 80px;
+  color: #ffff02;
+}
+
+.blink-right {
+  font-family: 'computer_pixel';
+  font-size: 70px;
+  position: absolute;
+  right: 70px;
+  top: 80px;
+  color: #ffff02;
+}
+
+.awoo {
+  font-family: 'computer_pixel';
+  font-size: 40px;
+  position: absolute;
+  right: 20px;
+}
+
+.loader,
+.loader:before,
+.loader:after {
+  border-radius: 50%;
+}
+.loader {
+  color: #ffffff;
+  font-size: 11px;
+  text-indent: -99999em;
+  margin: 55px auto;
+  position: relative;
+  width: 10em;
+  height: 10em;
+  box-shadow: inset 0 0 0 1em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.loader:before,
+.loader:after {
+  position: absolute;
+  content: '';
+}
+.loader:before {
+  width: 5.2em;
+  height: 10.2em;
+  background: #000000;
+  border-radius: 10.2em 0 0 10.2em;
+  top: -0.1em;
+  left: -0.1em;
+  -webkit-transform-origin: 5.2em 5.1em;
+  transform-origin: 5.2em 5.1em;
+  -webkit-animation: load2 2s infinite ease 1.5s;
+  animation: load2 2s infinite ease 1.5s;
+}
+.loader:after {
+  width: 5.2em;
+  height: 10.2em;
+  background: #000000;
+  border-radius: 0 10.2em 10.2em 0;
+  top: -0.1em;
+  left: 5.1em;
+  -webkit-transform-origin: 0px 5.1em;
+  transform-origin: 0px 5.1em;
+  -webkit-animation: load2 2s infinite ease;
+  animation: load2 2s infinite ease;
+}
+@-webkit-keyframes load2 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load2 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes flicker {
+  0% {
+    opacity: 0.09166;
+  }
+  5% {
+    opacity: 0.84124;
+  }
+  10% {
+    opacity: 0.98818;
+  }
+  15% {
+    opacity: 0.43783;
+  }
+  20% {
+    opacity: 0.51494;
+  }
+  25% {
+    opacity: 0.59567;
+  }
+  30% {
+    opacity: 0.52335;
+  }
+  35% {
+    opacity: 0.44828;
+  }
+  40% {
+    opacity: 0.13617;
+  }
+  45% {
+    opacity: 0.21539;
+  }
+  50% {
+    opacity: 0.59027;
+  }
+  55% {
+    opacity: 0.82194;
+  }
+  60% {
+    opacity: 0.90604;
+  }
+  65% {
+    opacity: 0.27342;
+  }
+  70% {
+    opacity: 0.65298;
+  }
+  75% {
+    opacity: 0.15824;
+  }
+  80% {
+    opacity: 0.38683;
+  }
+  85% {
+    opacity: 0.84124;
+  }
+  90% {
+    opacity: 0.56027;
+  }
+  95% {
+    opacity: 0.96051;
+  }
+  100% {
+    opacity: 0.88385;
+  }
+}
+.container::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.container::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+#switch:checked ~ .container::after {
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes turn-on {
+  0% {
+    transform: scale(1, 0.8) translate3d(0, 0, 0);
+    -webkit-filter: brightness(30);
+    filter: brightness(30);
+    opacity: 1;
+  }
+  3.5% {
+    transform: scale(1, 0.8) translate3d(0, 100%, 0);
+  }
+  3.6% {
+    transform: scale(1, 0.8) translate3d(0, -100%, 0);
+    opacity: 1;
+  }
+  9% {
+    transform: scale(1.3, 0.6) translate3d(0, 100%, 0);
+    -webkit-filter: brightness(30);
+    filter: brightness(30);
+    opacity: 0;
+  }
+  11% {
+    transform: scale(1, 1) translate3d(0, 0, 0);
+    -webkit-filter: contrast(0) brightness(0);
+    filter: contrast(0) brightness(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1, 1) translate3d(0, 0, 0);
+    -webkit-filter: contrast(1) brightness(1.2) saturate(1.3);
+    filter: contrast(1) brightness(1.2) saturate(1.3);
+    opacity: 1;
+  }
+}
+@keyframes turn-off {
+  0% {
+    transform: scale(1, 1.3) translate3d(0, 0, 0);
+    -webkit-filter: brightness(1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.3, 0.001) translate3d(0, 0, 0);
+    -webkit-filter: brightness(10);
+    filter: brightness(10);
+  }
+  100% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: scale(0, 0.0001) translate3d(0, 0, 0);
+    -webkit-filter: brightness(50);
+    filter: brightness(50);
+  }
+}
+.screen {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#switch ~ .container > .screen {
+  animation: turn-off 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+  animation-fill-mode: forwards;
+}
+
+#switch:checked ~ .container > .screen {
+  animation: turn-on 4s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes overlay-anim {
+  0% {
+    visibility: hidden;
+  }
+  20% {
+    visibility: hidden;
+  }
+  21% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+.overlay {
+  color: #00FF00;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 60px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#switch:checked ~ .container .overlay {
+  animation: overlay-anim 5s linear;
+  animation-fill-mode: forwards;
+}
+
+.container {
+}
+
+.loader-status {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+}
