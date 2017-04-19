@@ -60,12 +60,14 @@ channel.subscribe('top5', function (message) {
 });
 
 channel.subscribe('blacklist', function (message) {
-  console.log("Blacklist word: " + message);
+  console.log("Blacklist word: " + message.word);
+  server.broadcast(JSON.stringify({ 'type' : 'blacklist', 'word' : message.word }));
   filter.add(message.word);
 });
 
 channel.subscribe('whitelist', function (message) {
-  console.log("Whitelist word: " + message);
+  console.log("Whitelist word: " + message.word);
+  server.broadcast(JSON.stringify({ 'type' : 'whitelist', 'word' : message.word }));
   filter.remove(message.word);
 });
 
@@ -73,9 +75,9 @@ var client = new Twitter(Config.twitter);
 
 var stream = client.stream('statuses/filter', { track : Config.follow });
 stream.on('data', function(event) {
-  console.log(filter.list().length + " words loaded from profanity blacklist");
+  //console.log(filter.list().length + " words loaded from profanity blacklist");
   if (event && 'text' in event) {
-    if (!filter.check(event.text)) {
+    if (!filter.check(event.text) && !filter.check(event.user.name) && !filter.check(event.user.screen_name)) {
       server.broadcast(JSON.stringify({ 'type' : 'tweet', 'tweet' : event }));
     } else {
       console.log("Skipped message with profanity: " + event.text);
