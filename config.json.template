@@ -6,6 +6,7 @@
     "consumer_secret" : "<CONSUMER SECRET>",
     "access_token_key" : "<ACCESS TOKEN KEY>",
     "access_token_secret" : "<ACCESS TOKEN SECRET>"
-  }
+  },
+  'wmata" : "<WMATA ACCESS TOKEN>"
 }
 

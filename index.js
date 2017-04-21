@@ -5,6 +5,8 @@ var MongoClient = require('mongodb').MongoClient;
 var mubsub = require('mubsub');
 var filter = require('leo-profanity');
 var Config = require('./config');
+var http = require('http');
+var https = require('https');
 
 // how do you even use this
 /*const isTweet = _.conforms({
@@ -12,6 +14,39 @@ var Config = require('./config');
   id_str: _.isString,
   text: _.isString
 });*/
+
+/**
+ * getJSON:  REST get request returning JSON object(s)
+ * @param options: http options object
+ * @param callback: callback to pass the results JSON object(s) back
+ */
+var getJSON = function(options, onResult)
+{
+    console.log("rest::getJSON");
+
+    var prot = options.port == 443 ? https : http;
+    var req = prot.request(options, function(res)
+    {
+        var output = '';
+        console.log(options.host + ':' + res.statusCode);
+        res.setEncoding('utf8');
+
+        res.on('data', function (chunk) {
+            output += chunk;
+        });
+
+        res.on('end', function() {
+            var obj = JSON.parse(output);
+            onResult(res.statusCode, obj);
+        });
+    });
+
+    req.on('error', function(err) {
+        //res.send('error: ' + err.message);
+    });
+
+    req.end();
+};
 
 
 function isTweet(tweet) {
@@ -71,6 +106,12 @@ channel.subscribe('whitelist', function (message) {
   filter.remove(message.word);
 });
 
+channel.subscribe('marquee', function (message) {
+  console.log("Update marquee:" + message.text);
+  message.type = 'marquee';
+  server.broadcast(JSON.stringify(message));
+});
+
 var client = new Twitter(Config.twitter);
 
 var stream = client.stream('statuses/filter', { track : Config.follow });
@@ -102,7 +143,11 @@ server.on('connection', function connection(socket) {
     }
     console.log(data);
 
-    args = JSON.parse(data);
+    try {
+      args = JSON.parse(data);
+    } catch (e) {
+      args = { command: 'none' };
+    }
 
     if (args.command == 'history') {
       // send dozen most recent tweets
@@ -124,8 +169,33 @@ server.on('connection', function connection(socket) {
             socket.send(JSON.stringify({'type' : 'top5', 'message' : item }));       
           });
         });
+        var collection = db.collection('marquee');
+        var cursor = collection.find({'for' : 'twitter'});
+        cursor.toArray((err, items) => {
+          items.forEach((item) => {
+            socket.send(JSON.stringify({'type' : 'marquee', 'for' : 'twitter', 'text' : item.text}));
+          });
+        });
       });
+    } else if (args.command == 'trains') {
+        update_trains(socket);
     }
   });
 });
+
+
+// WMATA stuff
+
+var update_trains = function (socket) {
+  var request_options = {
+    host: 'api.wmata.com',
+    port: 443,
+    path: '/StationPrediction.svc/json/GetPrediction/N02',
+    headers: { api_key : Config.wmata },
+  };
+
+  getJSON(request_options, function(statusCode, result) {
+    socket.send(JSON.stringify({ 'type' : 'trains', 'trains' : result.Trains }));
+  });
+};
 

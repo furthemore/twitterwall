@@ -15,7 +15,7 @@ body {
   font-family: sans-serif;
   background-color: black;
   color: white;
-  /*overflow: hidden;*/
+  overflow: hidden;
 }
 
 img.header {
@@ -368,10 +368,29 @@ img.header {
 }
 
 .container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 .loader-status {
   position: absolute;
-  bottom: 0;
+  bottom: 15px;
   right: 20px;
+}
+
+.marquee {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  height: 60px;
+  font-family: 'computer_pixel';
+  font-size: 70px;
+}
+
+.marquee img.emoji {
+  height: 35px;
 }
